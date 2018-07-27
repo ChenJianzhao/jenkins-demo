@@ -1,0 +1,14 @@
+# 构建源码语言类型
+code.language=java
+
+# 构建打包使用jdk版本
+baseline.jdk=jdk-1.8.0_40
+
+# 构建打包所用的maven版本
+build.tools.maven=maven3.0.5
+
+# 构建打包使用的打包文件
+build.output=target/devops-demo.war
+
+# 应用部署脚本
+deploy.appctl.path=deploy.sh
