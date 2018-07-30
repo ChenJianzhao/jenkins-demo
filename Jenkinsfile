@@ -10,7 +10,9 @@ pipeline {
 //    }
     stages {
         stage('Init') {
-            sh "export PATH=$PATH:$MAVEN_HOME"
+            steps {
+                sh "export PATH=$PATH:$MAVEN_HOME"
+            }
         }
         stage('Build') {
 //            steps {
