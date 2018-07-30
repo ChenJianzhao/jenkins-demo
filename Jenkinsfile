@@ -9,9 +9,10 @@ pipeline {
 //        }
 //    }
 
-    environment {
-        PATH = "$PATH:$MAVEN_HOME"
-    }
+//    // for docker base jenkins
+//    environment {
+//        PATH = "$PATH:$MAVEN_HOME"
+//    }
 
     stages {
         stage('Build') {
@@ -19,8 +20,8 @@ pipeline {
 //                sh "mvn package"
 //            }
             steps {
-                sh 'echo "$MAVEN_HOME"'
-                sh 'echo "$PATH"'
+//                sh 'echo "$MAVEN_HOME"'
+//                sh 'echo "$PATH"'
                 sh 'mvn -version'
                 sh 'mvn package'
             }
