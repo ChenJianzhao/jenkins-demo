@@ -14,11 +14,11 @@ pipeline {
 //                sh "mvn package"
 //            }
             steps {
-                sh 'mvn -Dmaven.test.failure.ignore=true package'
+                sh "mvn -Dmaven.test.failure.ignore=true package"
             }
             post {
                 success {
-                    junit 'target/reports/**/*.xml'
+                    junit "target/reports/**/*.xml"
                 }
             }
         }
