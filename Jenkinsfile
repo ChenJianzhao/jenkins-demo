@@ -12,6 +12,7 @@ pipeline {
         stage('Init') {
             steps {
                 sh "export PATH=$PATH:$MAVEN_HOME/bin"
+                sh 'mvn -version'
             }
         }
         stage('Build') {
