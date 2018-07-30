@@ -9,9 +9,9 @@ pipeline {
 //        }
 //    }
 
-//    environment {
-//        PATH = "$PATH:$MAVEN_HOME"
-//    }
+    environment {
+        PATH = "$PATH:$MAVEN_HOME"
+    }
 
     stages {
         stage('Build') {
@@ -21,7 +21,8 @@ pipeline {
             steps {
                 sh 'echo "$MAVEN_HOME"'
                 sh 'echo "$PATH"'
-                sh 'mvn -Dmaven.test.failure.ignore=true package'
+                sh 'mvn -version'
+                sh 'mvn package'
             }
             post {
                 success {
