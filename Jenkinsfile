@@ -8,13 +8,12 @@ pipeline {
 //            args  '-v /tmp:/tmp'
 //        }
 //    }
+
+    environment {
+        PATH = "$PATH:$MAVEN_HOME"
+    }
+
     stages {
-        stage('Init') {
-            steps {
-                sh "export PATH=$PATH:$MAVEN_HOME/bin"
-                sh 'mvn -version'
-            }
-        }
         stage('Build') {
 //            steps {
 //                sh "mvn package"
