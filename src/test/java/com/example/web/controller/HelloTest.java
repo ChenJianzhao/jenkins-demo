@@ -10,8 +10,8 @@ public class HelloTest {
         assertEquals(1 + 1, 2);
     }
 
-    @Test
-    public void secondTest() {
-        assertEquals(1 + 1, 1);
-    }
+//    @Test
+//    public void secondTest() {
+//        assertEquals(1 + 1, 1);
+//    }
 }
