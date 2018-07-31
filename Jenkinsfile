@@ -29,7 +29,7 @@ pipeline {
                 sh 'mvn package'
             }
             post {
-                allways {
+                always {
                     junit 'target/report'
                 }
             }
