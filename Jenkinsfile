@@ -13,16 +13,19 @@ pipeline {
 //    environment {
 //        PATH = "$PATH:$MAVEN_HOME"
 //    }
-
+    tools {
+        maven 'Maven 3.5.3' // 需要现在全局配置中设置，可以选取已安装的，也可以配置自动安装
+    }
     stages {
-        stage('Build') {
-//            steps {
-//                sh "mvn package"
-//            }
+        stage('Check') {
             steps {
-//                sh 'echo "$MAVEN_HOME"'
-//                sh 'echo "$PATH"'
-                sh 'mvn -version'
+                sh 'echo "$MAVEN_HOME"'
+                sh 'echo "$PATH"'
+                sh "mvn -version"
+            }
+        }
+        stage('Build') {
+            steps {
                 sh 'mvn package'
             }
             post {
@@ -33,7 +36,7 @@ pipeline {
         }
         stage('Test'){
             steps {
-                sh "echo 'some test'"
+                sh "echo 'do some test'"
             }
         }
         stage('Deploy') {
@@ -72,13 +75,4 @@ pipeline {
             }
         }
     }
-//
-//    post {
-//        always {
-//            junit '**/target/*.xml'
-//        }
-//        failure {
-//            mail to: 'team@example.com', subject: 'The Pipeline failed :('
-//        }
-//    }
 }
