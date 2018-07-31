@@ -29,8 +29,8 @@ pipeline {
                 sh 'mvn package'
             }
             post {
-                success {
-                    junit 'target/reports/**/*.xml'
+                allways {
+                    junit 'target/report'
                 }
             }
         }
