@@ -17,29 +17,42 @@ pipeline {
         maven 'Maven 3.5.3' // 需要现在全局配置中设置，可以选取已安装的，也可以配置自动安装
     }
     stages {
-        stage('Check') {
+        stage('Check Environment') {
             steps {
                 sh 'echo "$MAVEN_HOME"'
                 sh 'echo "$PATH"'
                 sh "mvn -version"
             }
         }
-        stage('Build') {
+        stage('Build Project') {
             steps {
                 sh 'mvn package'
             }
             post {
                 always {
-                    junit 'target/**/*.xml'
+                    junit 'target/**/*.xml' // 需要遵循 “/**/*.xml” 的格式，否则会报错
                 }
             }
         }
-        stage('Test'){
+        stage('Deploy Dev'){
             steps {
-                sh "echo 'do some test'"
+                echo "Deploy to Dev Environment"
             }
         }
-        stage('Deploy') {
+        stage('Smoke Test'){
+            input {
+                message "Should we continue?"
+                ok "Yes, we should."
+                submitter "alice,bob"
+                parameters {
+                    string(name: 'PERSON', defaultValue: 'Mr Jenkins', description: 'Who should I say hello to?')
+                }
+            }
+            steps {
+                echo "Hello, ${PERSON}, Smoke Test Pass."
+            }
+        }
+        stage('Deploy Test') {
             steps {
 //                // sh 'make publish'
 //                withCredentials([usernamePassword(credentialsId: 'jenkins-username-password-for-aliyun',
@@ -72,6 +85,29 @@ pipeline {
                         )
                     ]
                 )
+            }
+        }
+        stage('Auto Test'){
+            steps {
+                echo "Auto Test"
+            }
+        }
+        stage('Manual Test') {
+            input {
+                message "Should we continue?"
+                ok "Yes, we should."
+                submitter "alice,bob"
+                parameters {
+                    string(name: 'PERSON', defaultValue: 'Mr Jenkins', description: 'Who should I say hello to?')
+                }
+            }
+            steps {
+                echo "Hello, ${PERSON}, Manual Test Pass."
+            }
+        }
+        stage('Deploy to Prod'){
+            steps {
+                echo "Deploy to Prod"
             }
         }
     }
