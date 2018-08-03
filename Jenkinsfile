@@ -26,10 +26,14 @@ pipeline {
         }
         stage('Build Project') {
             steps {
+                echo "code static analyse"
+            }
+            steps {
                 sh 'mvn package'
             }
             post {
                 always {
+                    archiveArtifacts artifacts: 'target/**/*.war', fingerprint: true
                     junit 'target/**/*.xml' // 需要遵循 “/**/*.xml” 的格式，否则会报错
                 }
             }
@@ -101,6 +105,23 @@ pipeline {
             }
             steps {
                 echo "Hello, ${PERSON}, Manual Test Pass."
+            }
+        }
+        stage('Deploy to Stage'){
+            steps {
+                echo "Deploy to Prod"
+            }
+        }
+        stage('Staging Test') {
+            input {
+                message "Should we continue?"
+                ok "Yes, we should."
+                parameters {
+                    string(name: 'PERSON', defaultValue: 'Mr Jenkins', description: 'Who should I say hello to?')
+                }
+            }
+            steps {
+                echo "Hello, ${PERSON}, Staging Test Pass."
             }
         }
         stage('Deploy to Prod'){
