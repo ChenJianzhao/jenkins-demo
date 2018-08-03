@@ -27,8 +27,6 @@ pipeline {
         stage('Build Project') {
             steps {
                 echo "code static analyse"
-            }
-            steps {
                 sh 'mvn package'
             }
             post {
