@@ -48,6 +48,7 @@ pipeline {
                 parameters {
                     string(name: 'PERSON', defaultValue: 'Mr Jenkins', description: 'Who should I say hello to?')
                 }
+                submitter "test"
             }
             steps {
                 echo "Hello, ${PERSON}, Smoke Test Pass."
