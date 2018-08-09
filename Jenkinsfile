@@ -16,7 +16,7 @@ pipeline {
     tools {
         maven 'Maven 3.5.3' // 需要现在全局配置中设置，可以选取已安装的，也可以配置自动安装
     }
-    properties([parameters([text(defaultValue: '', description: 'changed nginx.conf', name: 'nginxConfigName')])])
+    //properties([parameters([text(defaultValue: '', description: 'changed nginx.conf', name: 'nginxConfigName')])])
     stages {
         stage('Check Environment') {
             steps {
@@ -41,7 +41,7 @@ pipeline {
             steps {
                 git branch: 'jwt', credentialsId: 'username_password_for_gitlab', url: 'http://chenjz@gitlab.dinghuo123.com/Test/nginx.git'
                 cd nginx
-                echo $nginxConfigName
+                //echo $nginxConfigName
             }
         }
         stage('Deploy Dev'){
