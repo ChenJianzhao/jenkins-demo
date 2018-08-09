@@ -39,8 +39,10 @@ pipeline {
         }
         stage('Collect Config'){
             steps {
-                git branch: 'jwt', credentialsId: 'username_password_for_gitlab', url: 'http://chenjz@gitlab.dinghuo123.com/Test/nginx.git'
-                cd nginx
+                git branch: 'master', credentialsId: 'jenkins-username-password-for-github', url: 'https://github.com/ChenJianzhao/gocd-demo.git'
+                sh 'pwd'
+                sh 'ls -lat'
+//                sh '' nginx
                 //echo $nginxConfigName
             }
         }
