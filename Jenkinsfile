@@ -18,9 +18,9 @@ pipeline {
     tools {
         maven 'Maven 3.5.3' // 需要现在全局配置中设置，可以选取已安装的，也可以配置自动安装
     }
-//    parameters {
-//        string defaultValue: '', description: 'nginxConfigLocation', name: 'nginxConfigLocation', trim: false
-//    }
+    parameters {
+        string defaultValue: '', description: 'nginxConfigLocation', name: 'nginxConfigLocation', trim: false
+    }
     stages {
         stage('Check Environment') {
             steps {
@@ -53,7 +53,7 @@ pipeline {
                                                url: 'http://chenjz@gitlab.dinghuo123.com/Test/nginx.git']]])
                 sh 'pwd'
                 sh 'ls -lat'
-                sh 'echo nginxConfigLocation: ${params.nginxConfigLocation}'
+                echo nginxConfigLocation: ${params.nginxConfigLocation}
                 //echo $nginxConfigName
             }
             post {
