@@ -53,7 +53,7 @@ pipeline {
                                                url: 'http://chenjz@gitlab.dinghuo123.com/Test/nginx.git']]])
                 sh 'pwd'
                 sh 'ls -lat'
-                echo nginxConfigLocation: ${params.nginxConfigLocation}
+                echo "nginxConfigLocation: ${params.nginxConfigLocation}"
                 //echo $nginxConfigName
             }
             post {
