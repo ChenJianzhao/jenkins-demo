@@ -17,6 +17,9 @@ pipeline {
         maven 'Maven 3.5.3' // 需要现在全局配置中设置，可以选取已安装的，也可以配置自动安装
     }
     //properties([parameters([text(defaultValue: '', description: 'changed nginx.conf', name: 'nginxConfigName')])])
+    parameters {
+        string defaultValue: '', description: 'nginxConfigLocation', name: 'nginxConfigLocation', trim: false
+    }
     stages {
         stage('Check Environment') {
             steps {
@@ -41,16 +44,21 @@ pipeline {
             steps {
 //                git branch: 'master', credentialsId: 'jenkins-username-password-for-github', url: 'https://github.com/ChenJianzhao/gocd-demo.git'
                 checkout([$class: 'GitSCM',
-                          branches: [[name: '*/master']],
+                          branches: [[name: '*/jwt']],
                           doGenerateSubmoduleConfigurations: false,
                           extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'nginx']],
                           submoduleCfg: [],
-                          userRemoteConfigs: [[credentialsId: 'jenkins-username-password-for-github',
-                                               url: 'https://github.com/ChenJianzhao/gocd-demo.git']]])
+                          userRemoteConfigs: [[credentialsId: 'username-password-for-gitlab',
+                                               url: 'http://chenjz@gitlab.dinghuo123.com/Test/nginx.git']]])
                 sh 'pwd'
                 sh 'ls -lat'
-//                sh '' nginx
+                sh 'echo nginxConfigLocation: ${params.nginxConfigLocation}'
                 //echo $nginxConfigName
+            }
+            post {
+                always {
+                    archiveArtifacts artifacts: 'nginx/${params.nginxConfigLocation}', fingerprint: true
+                }
             }
         }
         stage('Deploy Dev'){
