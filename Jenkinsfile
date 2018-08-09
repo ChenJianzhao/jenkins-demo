@@ -16,6 +16,7 @@ pipeline {
     tools {
         maven 'Maven 3.5.3' // 需要现在全局配置中设置，可以选取已安装的，也可以配置自动安装
     }
+    properties([parameters([text(defaultValue: '', description: 'changed nginx.conf', name: 'nginxConfigName')])])
     stages {
         stage('Check Environment') {
             steps {
@@ -34,6 +35,13 @@ pipeline {
                     archiveArtifacts artifacts: 'target/**/*.war', fingerprint: true
                     junit 'target/**/*.xml' // 需要遵循 “/**/*.xml” 的格式，否则会报错
                 }
+            }
+        }
+        stage('Collect Config'){
+            steps {
+                git branch: 'jwt', credentialsId: 'username_password_for_gitlab', url: 'http://chenjz@gitlab.dinghuo123.com/Test/nginx.git'
+                cd nginx
+                echo $nginxConfigName
             }
         }
         stage('Deploy Dev'){
