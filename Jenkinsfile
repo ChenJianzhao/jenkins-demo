@@ -58,7 +58,7 @@ pipeline {
             }
             post {
                 always {
-                    archiveArtifacts artifacts: 'nginx/${params.nginxConfigLocation}', fingerprint: true
+                    archiveArtifacts artifacts: "nginx/${params.nginxConfigLocation}", fingerprint: true
                 }
             }
         }
