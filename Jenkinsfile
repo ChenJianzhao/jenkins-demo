@@ -39,7 +39,14 @@ pipeline {
         }
         stage('Collect Config'){
             steps {
-                git branch: 'master', credentialsId: 'jenkins-username-password-for-github', url: 'https://github.com/ChenJianzhao/gocd-demo.git'
+//                git branch: 'master', credentialsId: 'jenkins-username-password-for-github', url: 'https://github.com/ChenJianzhao/gocd-demo.git'
+                checkout([$class: 'GitSCM',
+                          branches: [[name: '*/master']],
+                          doGenerateSubmoduleConfigurations: false,
+                          extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'nginx']],
+                          submoduleCfg: [],
+                          userRemoteConfigs: [[credentialsId: 'jenkins-username-password-for-github',
+                                               url: 'https://github.com/ChenJianzhao/gocd-demo.git']]])
                 sh 'pwd'
                 sh 'ls -lat'
 //                sh '' nginx
