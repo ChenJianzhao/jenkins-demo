@@ -1,5 +1,5 @@
 #!groovy
-properties([parameters([string(defaultValue: '', description: 'nginxConfigLocation', name: 'nginxConfigLocation', trim: false)])])
+//properties([parameters([string(defaultValue: '', description: 'nginxConfigLocation', name: 'nginxConfigLocation', trim: false)])])
 
 pipeline {
     agent any
@@ -18,8 +18,10 @@ pipeline {
     tools {
         maven 'Maven 3.5.3' // 需要现在全局配置中设置，可以选取已安装的，也可以配置自动安装
     }
+    // properties or parameters? try one!
     parameters {
         string defaultValue: '', description: 'nginxConfigLocation', name: 'nginxConfigLocation', trim: false
+        choice choices: ['none', 'jgitflow:release-start', 'jgitflow:release-finish'], description: '', name: 'jgitflowFlag'
     }
     stages {
         stage('Check Environment') {
@@ -30,9 +32,18 @@ pipeline {
             }
         }
         stage('Build Project') {
+            environment {
+                mvnBasicArgs = "-e -B -f pom.xml -Dmaven.javadoc.skip=true"
+            }
             steps {
+                script {
+                    if($BRANCH_NAME == 'develop') {
+                        mvnBasicArgs = "$mvnBasicArgs" + " -Dmaven.test.skip=true"
+                    }
+                }
+                echo "mvnBasicArgs : $mvnBasicArgs"
                 echo "code static analyse"
-                sh 'mvn package'
+                sh "mvn $mvnBasicArgs package"
             }
             post {
                 always {
@@ -43,7 +54,9 @@ pipeline {
         }
         stage('Collect Config'){
             steps {
-//                git branch: 'master', credentialsId: 'jenkins-username-password-for-github', url: 'https://github.com/ChenJianzhao/gocd-demo.git'
+                // git 是 checkout 的一种缩略形式，似乎不能定义检出到子目录
+                // 但 options 似乎有一个选项可以设置子目录，未验证
+                // git branch: 'master', credentialsId: 'jenkins-username-password-for-github', url: 'https://github.com/ChenJianzhao/gocd-demo.git'
                 checkout([$class: 'GitSCM',
                           branches: [[name: '*/jwt']],
                           doGenerateSubmoduleConfigurations: false,
@@ -54,7 +67,6 @@ pipeline {
                 sh 'pwd'
                 sh 'ls -lat'
                 echo "nginxConfigLocation: ${params.nginxConfigLocation}"
-                //echo $nginxConfigName
             }
             post {
                 always {
@@ -72,9 +84,9 @@ pipeline {
                 message "Should we continue?"
                 ok "Yes, we should."
                 parameters {
-                    string(name: 'PERSON', defaultValue: 'Mr Jenkins', description: 'Who should I say hello to?')
+                    string(name: 'PERSON', defaultValue: 'admin', description: 'Who should I say hello to?')
                 }
-                submitter "tester"
+                submitter "admin"
             }
             steps {
                 echo "Hello, ${PERSON}, Smoke Test Pass."
@@ -82,12 +94,6 @@ pipeline {
         }
         stage('Deploy Test') {
             steps {
-//                // sh 'make publish'
-//                withCredentials([usernamePassword(credentialsId: 'jenkins-username-password-for-aliyun',
-//                                                passwordVariable: 'PASSWORD_FOR_ALIYUN',
-//                                                usernameVariable: 'USERNAME_FOR_ALIYUN')]) {
-//                    // some block
-//                }
 
                 sshPublisher(
                     publishers: [
