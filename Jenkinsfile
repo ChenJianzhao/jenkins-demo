@@ -37,7 +37,7 @@ pipeline {
             }
             steps {
                 script {
-                    if($BRANCH_NAME == 'develop') {
+                    if(${env.BRANCH_NAME} == 'develop') {
                         mvnBasicArgs = "$mvnBasicArgs" + " -Dmaven.test.skip=true"
                     }
                 }
