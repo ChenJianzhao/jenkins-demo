@@ -1,6 +1,9 @@
 #!groovy
 //properties([parameters([string(defaultValue: '', description: 'nginxConfigLocation', name: 'nginxConfigLocation', trim: false)])])
-
+library identifier: 'shared-library@master', retriever: modernSCM(
+        [$class: 'GitSCMSource',
+         remote: 'https://github.com/ChenJianzhao/shared-library.git',
+         credentialsId: 'username-password-for-github'])
 pipeline {
     agent any
 //    agent {
@@ -36,19 +39,23 @@ pipeline {
                 mvnBasicArgs = "-e -B -f pom.xml -Dmaven.javadoc.skip=true"
             }
             steps {
-                script {
-                    if( env.BRANCH_NAME == 'develop') {
-                        mvnBasicArgs = "$mvnBasicArgs" + " -Dmaven.test.skip=true"
-                    }
-                }
-                echo "mvnBasicArgs : $mvnBasicArgs"
-                echo "code static analyse"
-                sh "mvn $mvnBasicArgs package"
+//                script {
+//                    if( env.BRANCH_NAME != 'develop') {
+//                        mvnBasicArgs = "$mvnBasicArgs" + " -Dmaven.test.skip=true"
+//                    }
+//                }
+//                echo "mvnBasicArgs : $mvnBasicArgs"
+//                echo "code static analyse"
+//                sh "mvn $mvnBasicArgs package"
+
+                // 调用 shared lib
+                buildPlugin()
+
             }
             post {
                 always {
                     archiveArtifacts artifacts: 'target/**/*.war', fingerprint: true
-                    junit 'target/**/*.xml' // 需要遵循 “/**/*.xml” 的格式，否则会报错
+                    // junit 'target/**/*.xml' // 需要遵循 “/**/*.xml” 的格式，否则会报错
                 }
             }
         }
