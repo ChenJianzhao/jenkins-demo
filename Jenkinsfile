@@ -69,7 +69,7 @@ pipeline {
                                         mavenAssetList: [[classifier: '',
                                                           extension: '',
                                                           filePath: 'target/devops-demo.war']],
-                                        mavenCoordinate: [artifactId: 'java-demo',
+                                        mavenCoordinate: [artifactId: 'devops-demo',
                                                           groupId: 'com.example',
                                                           packaging: 'war',
                                                           version: '1.0']
