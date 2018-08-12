@@ -68,7 +68,7 @@ pipeline {
                             packages: [[$class: 'MavenPackage',
                                         mavenAssetList: [[classifier: '',
                                                           extension: '',
-                                                          filePath: 'target/**/*.war']],
+                                                          filePath: 'target/devops-demo.war']],
                                         mavenCoordinate: [artifactId: 'java-demo',
                                                           groupId: 'com.example',
                                                           packaging: 'war',
