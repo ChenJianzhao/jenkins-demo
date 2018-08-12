@@ -1,9 +1,9 @@
 #!groovy
 //properties([parameters([string(defaultValue: '', description: 'nginxConfigLocation', name: 'nginxConfigLocation', trim: false)])])
-library identifier: 'shared-library@master', retriever: modernSCM(
-        [$class: 'GitSCMSource',
-         remote: 'https://github.com/ChenJianzhao/shared-library.git',
-         credentialsId: 'username-password-for-github'])
+//library identifier: 'shared-library@master', retriever: modernSCM(
+//        [$class: 'GitSCMSource',
+//         remote: 'https://github.com/ChenJianzhao/shared-library.git',
+//         credentialsId: 'username-password-for-github'])
 pipeline {
     agent any
 //    agent {
@@ -39,6 +39,12 @@ pipeline {
                 mvnBasicArgs = "-e -B -f pom.xml -Dmaven.javadoc.skip=true"
             }
             steps {
+                library identifier: 'shared-library@master', retriever: modernSCM(
+                        [$class: 'GitSCMSource',
+                         credentialsId: 'username-password-for-github',
+                         id: 'c67f6abb-dca9-467c-92ef-b6fa4a745110',
+                         remote: 'https://github.com/ChenJianzhao/shared-library.git',
+                         traits: [[$class: 'jenkins.plugins.git.traits.BranchDiscoveryTrait']]])
 //                script {
 //                    if( env.BRANCH_NAME != 'develop') {
 //                        mvnBasicArgs = "$mvnBasicArgs" + " -Dmaven.test.skip=true"
