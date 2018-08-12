@@ -72,7 +72,7 @@ pipeline {
                                         mavenCoordinate: [artifactId: 'java-demo',
                                                           groupId: 'com.example',
                                                           packaging: 'war',
-                                                          version: '0.1']
+                                                          version: '1.0']
                                        ]]
 
                 }
