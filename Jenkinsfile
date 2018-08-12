@@ -62,6 +62,19 @@ pipeline {
                 always {
                     archiveArtifacts artifacts: 'target/**/*.war', fingerprint: true
                     // junit 'target/**/*.xml' // 需要遵循 “/**/*.xml” 的格式，否则会报错
+
+                    nexusPublisher nexusInstanceId: 'nexus',
+                            nexusRepositoryId: 'maven-snapshots',
+                            packages: [[$class: 'MavenPackage',
+                                        mavenAssetList: [[classifier: '',
+                                                          extension: '',
+                                                          filePath: 'target/**/*.war']],
+                                        mavenCoordinate: [artifactId: 'java-demo',
+                                                          groupId: 'com.example',
+                                                          packaging: 'war',
+                                                          version: '0.1']
+                                       ]]
+
                 }
             }
         }
