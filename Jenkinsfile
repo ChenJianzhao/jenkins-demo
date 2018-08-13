@@ -1,4 +1,8 @@
 #!groovy
-@Library('shared-lib') _
+//@Library('shared-lib') _
+
+libraries {
+    lib('shared-lib@master')
+}
 
 main()
