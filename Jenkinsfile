@@ -97,7 +97,7 @@ pipeline {
         }
         stage('Deploy Test') {
             steps {
-
+                echo "Deploy to Test Environment"
 //                sshPublisher(
 //                    publishers: [
 //                        sshPublisherDesc(
