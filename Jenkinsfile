@@ -1,4 +1,4 @@
 #!groovy
-@Library('my-shared-library') _
+@Library('shared-lib') _
 
 main()
