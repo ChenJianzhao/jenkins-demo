@@ -15,15 +15,15 @@ pipeline {
     }
     stages {
         stage('Checkout SCM') {
-
-            checkout([$class: 'GitSCM',
-                      branches: [[name: '*/feature/ext-jenkinsfile']],
-                      doGenerateSubmoduleConfigurations: false,
-                      extensions: [],
-                      submoduleCfg: [],
-                      userRemoteConfigs: [[credentialsId: 'jenkins-username-password-for-github',
-                                           url: 'https://github.com/ChenJianzhao/jenkins-demo.git']]])
-
+            steps {
+                checkout([$class: 'GitSCM',
+                          branches: [[name: '*/feature/ext-jenkinsfile']],
+                          doGenerateSubmoduleConfigurations: false,
+                          extensions: [],
+                          submoduleCfg: [],
+                          userRemoteConfigs: [[credentialsId: 'jenkins-username-password-for-github',
+                                               url: 'https://github.com/ChenJianzhao/jenkins-demo.git']]])
+            }
         }
         stage('Check Environment') {
             steps {
