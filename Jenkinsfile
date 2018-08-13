@@ -1,23 +1,7 @@
 #!groovy
-//properties([parameters([string(defaultValue: '', description: 'nginxConfigLocation', name: 'nginxConfigLocation', trim: false)])])
-//library identifier: 'shared-library@master', retriever: modernSCM(
-//        [$class: 'GitSCMSource',
-//         remote: 'https://github.com/ChenJianzhao/shared-library.git',
-//         credentialsId: 'username-password-for-github'])
 pipeline {
     agent any
-//    agent {
-//        docker {
-//            image 'maven'
-//            label 'my-defined-label'
-//            args  '-v /tmp:/tmp'
-//        }
-//    }
 
-//    // for docker base jenkins
-//    environment {
-//        PATH = "$PATH:$MAVEN_HOME"
-//    }
     tools {
         maven 'Maven 3.5.3' // 需要现在全局配置中设置，可以选取已安装的，也可以配置自动安装
     }
@@ -26,7 +10,21 @@ pipeline {
         string defaultValue: '', description: 'nginxConfigLocation', name: 'nginxConfigLocation', trim: false
         choice choices: ['none', 'jgitflow:release-start', 'jgitflow:release-finish'], description: '', name: 'jgitflowFlag'
     }
+    options {
+        skipDefaultCheckout true
+    }
     stages {
+        stage('Checkout SCM') {
+
+            checkout([$class: 'GitSCM',
+                      branches: [[name: '*/feature/ext-jenkinsfile']],
+                      doGenerateSubmoduleConfigurations: false,
+                      extensions: [],
+                      submoduleCfg: [],
+                      userRemoteConfigs: [[credentialsId: 'jenkins-username-password-for-github',
+                                           url: 'https://github.com/ChenJianzhao/jenkins-demo.git']]])
+
+        }
         stage('Check Environment') {
             steps {
                 sh 'echo "$MAVEN_HOME"'
@@ -45,14 +43,6 @@ pipeline {
                          id: 'c67f6abb-dca9-467c-92ef-b6fa4a745110',
                          remote: 'https://github.com/ChenJianzhao/shared-library.git',
                          traits: [[$class: 'jenkins.plugins.git.traits.BranchDiscoveryTrait']]])
-//                script {
-//                    if( env.BRANCH_NAME != 'develop') {
-//                        mvnBasicArgs = "$mvnBasicArgs" + " -Dmaven.test.skip=true"
-//                    }
-//                }
-//                echo "mvnBasicArgs : $mvnBasicArgs"
-//                echo "code static analyse"
-//                sh "mvn $mvnBasicArgs package"
 
                 // 调用 shared lib
                 buildPlugin()
@@ -62,19 +52,6 @@ pipeline {
                 always {
                     archiveArtifacts artifacts: 'target/**/*.war', fingerprint: true
                     // junit 'target/**/*.xml' // 需要遵循 “/**/*.xml” 的格式，否则会报错
-
-                    nexusPublisher nexusInstanceId: 'nexus',
-                            nexusRepositoryId: 'maven-snapshots',
-                            packages: [[$class: 'MavenPackage',
-                                        mavenAssetList: [[classifier: '',
-                                                          extension: '',
-                                                          filePath: 'target/devops-demo.war']],
-                                        mavenCoordinate: [artifactId: 'devops-demo',
-                                                          groupId: 'com.example',
-                                                          packaging: 'war',
-                                                          version: '1.0']
-                                       ]]
-
                 }
             }
         }
@@ -121,30 +98,30 @@ pipeline {
         stage('Deploy Test') {
             steps {
 
-                sshPublisher(
-                    publishers: [
-                        sshPublisherDesc(
-                            configName: 'aliyun',
-                            transfers: [
-                                sshTransfer(excludes: '',
-                                    execCommand: '''if [ -f "/home/admin/devops-demo/deploy.sh" ]; then /home/admin/devops-demo/deploy.sh stop; fi
-                                    /home/admin/devops-demo/deploy.sh start''',
-                                execTimeout: 120000,
-                                flatten: false,
-                                makeEmptyDirs: false,
-                                noDefaultExcludes: false,
-                                patternSeparator: '[, ]+',
-                                remoteDirectory: 'home/admin/devops-demo',
-                                remoteDirectorySDF: false,
-                                removePrefix: 'target',
-                                sourceFiles: '**/*.war')
-                            ],
-                            usePromotionTimestamp: false,
-                            useWorkspaceInPromotion: false,
-                            verbose: false
-                        )
-                    ]
-                )
+//                sshPublisher(
+//                    publishers: [
+//                        sshPublisherDesc(
+//                            configName: 'aliyun',
+//                            transfers: [
+//                                sshTransfer(excludes: '',
+//                                    execCommand: '''if [ -f "/home/admin/devops-demo/deploy.sh" ]; then /home/admin/devops-demo/deploy.sh stop; fi
+//                                    /home/admin/devops-demo/deploy.sh start''',
+//                                execTimeout: 120000,
+//                                flatten: false,
+//                                makeEmptyDirs: false,
+//                                noDefaultExcludes: false,
+//                                patternSeparator: '[, ]+',
+//                                remoteDirectory: 'home/admin/devops-demo',
+//                                remoteDirectorySDF: false,
+//                                removePrefix: 'target',
+//                                sourceFiles: '**/*.war')
+//                            ],
+//                            usePromotionTimestamp: false,
+//                            useWorkspaceInPromotion: false,
+//                            verbose: false
+//                        )
+//                    ]
+//                )
             }
         }
         stage('Auto Test'){
