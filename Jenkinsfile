@@ -2,7 +2,7 @@
 
 // 需要预先在 Jenkins 系统管理 ->  系统设置 -> Global Pipeline Libraries 中配置好 shared libraries
 // 引入 shared-lib
-@Library('shared-lib@master') _
+//@Library('shared-lib@master') _
 
 properties([
         parameters([string(defaultValue: 'master', description: 'LIB_VERSION', name: 'LIB_VERSION', trim: false),
