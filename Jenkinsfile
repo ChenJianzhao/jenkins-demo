@@ -1,5 +1,5 @@
 #!groovy
-@Library('shared-lib@feature/jenkins-cd') _
+@Library('shared-lib@master') _
 
 // 需要在 In-process Script Approval
 loadExtPipeline()
