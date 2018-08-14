@@ -1,4 +1,5 @@
 #!groovy
 @Library('shared-lib@master') _
 
-run()
+// 需要在 In-process Script Approval
+loadExtPipeline()
